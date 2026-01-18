@@ -1,0 +1,20 @@
+name: Build DX12 Sample
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build HelloTriangle
+      run: |
+        cd Samples\Desktop\D3D12HelloWorld
+        msbuild D3D12HelloWorld.sln /p:Configuration=Release /p:Platform=x64
+
+    - name: Upload EXE
+      uses: actions/upload-artifact@v4
+      with:
+        name: HelloTriangle-exe
+        path: Samples/Desktop/D3D12HelloWorld/x64/Release/*.exe
