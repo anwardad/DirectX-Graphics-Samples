@@ -1,7 +1,7 @@
 name: Build DirectX 12 Samples
 
 on:
-  workflow_dispatch: 
+  workflow_dispatch: # Allows you to manually trigger the build via the Actions tab
 
 jobs:
   build:
@@ -14,11 +14,17 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v2
+
+    - name: Restore NuGet Packages
+      run: nuget restore "Samples\Desktop\D3D12HelloWorld\src\D3D12HelloWorld.sln"
+
     - name: Build D3D12HelloWorld Solution
-      run: msbuild "Samples\Desktop\D3D12HelloWorld\D3D12HelloWorld.sln" /p:Configuration=Release /p:Platform=x64
+      run: msbuild "Samples\Desktop\D3D12HelloWorld\src\D3D12HelloWorld.sln" /p:Configuration=Release /p:Platform=x64
 
     - name: Upload Compiled Binaries
       uses: actions/upload-artifact@v4
       with:
         name: D3D12HelloWorld-Binaries
-        path: Samples\Desktop\D3D12HelloWorld\bin\x64\Release\
+        path: Samples\Desktop\D3D12HelloWorld\src\bin\x64\Release\
